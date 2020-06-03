@@ -69,6 +69,10 @@ func Set(obj interface{}, prop string, value interface{}) error {
 		}
 	}
 
+	if reflect.TypeOf(obj).Kind() != reflect.Ptr && reflect.TypeOf(obj).Kind() != reflect.Map {
+		obj = &obj
+	}
+
 	return setProperty(obj, last, value)
 
 	return err
