@@ -22,7 +22,7 @@ func Get(obj interface{}, prop string) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		if obj == nil {
+		if isNil(obj) {
 			return nil, nil
 		}
 	}
@@ -88,4 +88,17 @@ func setProperty(obj interface{}, prop string, val interface{}) error {
 	prop = strings.Title(prop)
 
 	return reflections.SetField(obj, prop, val)
+}
+
+// TODO request this change with github.com/go-bongo/go-dotaccess
+// Take from medium article https://medium.com/@mangatmodi/go-check-nil-interface-the-right-way-d142776edef1
+func isNil(i interface{}) bool {
+	if i == nil {
+		return true
+	}
+	switch reflect.TypeOf(i).Kind() {
+	case reflect.Ptr, reflect.Map, reflect.Array, reflect.Chan, reflect.Slice:
+		return reflect.ValueOf(i).IsNil()
+	}
+	return false
 }
